@@ -1,3 +1,7 @@
+7. Error Handling: How do the different patterns(Observer, chain of Responsibility) handle error conditions? What are the trade-offs between fail-fast and fail-safe error handling strategies?
+
+The Observer Pattern handles error conditions by catching exceptions and logging them so that other observers can be executed. The Chain of Responsibility pattern passes the error condition through a chain of handlers where each handler either processes the request if it meets the right conditions or passes onto the next handler in the chain. For fail-fast error handling, it makes debugging much easier since the error is shown when the code fails; however, it can lead to the system stopping frequently while fail-safe can still continue running the code while handling the errors, making errors difficult to locate.
+
 11. Pattern Integration: How do the design patterns in this lab complement each other? What challenges arise when integrating multiple patterns, and how does the hexagonal architecture help manage this complexity? Provide specific examples from the implementation.
 
 In this lab I noticed how the different design patterns really work together to make the system both flexible and organized. The creational patterns like Factory and Builder help create complex objects which then fit into structural patterns such as Composite to manage hierarchical relationships. For example the MaterialDirector uses the Builder to create MaterialBundle objects that follow the Composite pattern.
