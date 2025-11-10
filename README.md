@@ -1,3 +1,51 @@
+2. What are the main challenges when making a system thread safe? How do you balance performance with correctness? Explain the trade offs between different synchronization mechanisms (ReentrantReadWriteLock vs ConcurrentHashMap vs synchronized blocks)
+
+The main challenge when making a system thread safe is trying to share or manage objects across threads without running into issues such as race conditions or deadlock. Multiple threads within a single process will share the same space, and with that being said, multiple threads can read and write to the same object or data, which will cause unexpected outputs such as old or lost values, which are race conditions. Deadlocks can happen when multiple threads try to retrieve locks on shared resources in an unexpected order, possibly leading to each thread waiting for one another due to them holding a resource that the other needs. To balance performance with correctness, when tasked with different problems, choosing the correct data structure can be important to achieving good performance as the wrong data structure can make the implementation both more complex and perform worse. For correctness, use OOP and SOLID principles to create well designed, readable, and reusable code, and as for performance, an example is using caching such as LRU to store the results of operations that are costly so they are not repeated.
+
+As for ReentrantReadWriteLock, it allows for better read performance since multiple reads can happen at the same time. The disadvantage of it is that it is more complex than the typical ReentrantLock.
+
+For ConcurrentHashmap, the advantages of it is that it allows multiple threads to read and write data simultaneously without having to lock the entire map, also supports atomic operations such as replace and remove. Some downsides is that there cannot be null objects inserted, it uses more memory because of its locking mechanism, and its complexity to implement in code
+
+For synchronized blocks, the advantages of it is that only one thread can execute a specific block of code at a time so race conditions can be prevented and consistency across multiple threads can be maintained. A tradeoff is also because of its ability to only allow one thread at a time, because if multiple threads want to read a shared resource but not update it, it is safe to do so but the synchronized block is limited because of it.
+
+3. Which design patterns from this lab would for a real-world ecommerce system? Justify your choices with specific use cases. How would you adapt these patterns for a microservices architecture?
+
+
+The factory method pattern allows for the creation of different product types such as physical products, digital products based on the input. Another pattern would be the Hexagonal architecture to allow the core to communicate with external services like an API. For example, payment processing using the Stripe API. In addition, the observer pattern could be used in the case of notification updates, where users could subscribe to a product for things like stock availability, or shipping updates, where it would notify everyone subscribed to the product if it has come back in stock, or if their order status has changed (ie processed to shipped). The final pattern would be the Decorator Pattern where you could add extra features or characteristics to a product before buying. For example, on checkout, you could add features such as gift wrapping, faster shipping, or extended warranty to the product.
+As for adapting to microservice architectures, the factory method pattern can decide which service to call based on the parameter it is given on runtime. In the context of an ecommerce system, this can be done in the payment processing section where the user can select their payment method. If they select Credit/Debit card, the Stripe microservice can be called to handle that method, or if they choose Paypal, the Paypal microservice will be called instead.
+
+
+For hexagonal architecture, each microservice would have its own port that it needs to implement the functionality for. For example, the payment processing will have a port/interface that will define the contract for how they will interact, and then the adapter connecting to it will implement the actual logic to do so.
+
+As for the observer pattern, when the payment goes through and the order is processed, there can be other microservices that now subscribe to that event of the order going through, such as notifications to email, and the microservice that is responsible for the stock availability subscribes to that and is notified that there is one less stock in the warehouse.
+
+Finally, the decorator pattern can be used to add additional internal features to the application without changing the main logic, like a logger to record events and information when the code is run, and also rate limiting, keeping the original logic in place, but adding a feature on that of that logic to shield against a large number of requests within a certain amount of time.
+
+4. When would you choose a simple ArrayList over a more complex Trie for search operations? What factors influence this decision? How do you measure and validate performance improvements?
+
+
+   A simple ArrayList would be better than a Trie for search operations when it comes to dealing with a smaller dataset, and also dealing with whole strings by using the .contains() method on the ArrayList. Also, if searches aren’t frequently done, the implementation of an Arraylist would be much better to use because of its straightforward maintainability and code readability.
+
+As for a Trie, it would be better when you are dealing with larger data sets, but also handling scenarios like autocomplete and finding words with a common prefix as they are connected by nodes.
+
+When it comes to measuring and validating performances for the ArrayList and Trie for search operations, the time complexity of an ArrayList if it is unsorted is O(N) as you may have to search the entire list. For a Trie, the time complexity of searching is O(L) where L is the length of the word we are string we are searching for. The space complexity of a Trie is O(N*M) where N is the number of nodes it has, and M is the number of references a single node may have. As for an ArrayList, it is O(N) where N is the number of elements in the list.
+
+To measure and validate this, we can use the Java microbenchmark harness (JMH) to test these data structures on larger datasets, so thousands of words as the complexities of the data structure really matter in its worst case scenario, when inputs become larger. We can create several test benchmarks for Trie and ArrayLists, and take the average of their results. We will know that it is valid if we see that an Arraylist will have better results than a Trie on smaller datasets, and then a Trie performing better for prefix searching or larger data sets.
+
+5. How do mutation testing and static analysis complement traditional unit testing? What additional confidence do they provide? Explain the difference between code coverage and mutation score, and why both metrics are important
+
+
+   Static analysis means analyzing code without executing it to find any potential bugs or issues, which are typically done by external automated tools rather than a human. Mutation testing is where the program is modified in small ways like changing the operator or using the wrong variable name and then rerunning the tests. If the tests fail, the mutant was killed meaning that your test caught the bug, but if they pass, your test cases missed an issue.
+
+Therefore, static analysis will prevent bad code and any potential issues or bugs before they are even executed. Unit tests will ensure that your code functions properly as intended, and mutation testing will help against any errors that may happen in your code, such as missing variables.
+
+Static analysis will give confidence for catching security issues before releasing to production, and enhance proper coding styles and guidelines. Mutation testing will give confidence in catching real errors if another person has introduced them.
+
+Code coverage only shows how many lines of your code are actually executed by your unit tests, whereas mutation score shows the percentage of errors found in your code making small changes, meaning how well your test cases properly detect the mutants. This means that just having 80% code coverage or higher only means that amount is executed by tests, but doesn’t explicitly show whether or not your tests are good at detecting different bugs in your code.
+
+Code coverage is important because you want to ensure that your code can run properly with as little as possible to untested code, and a high mutation score is important since it will contain assertions so it will check for errors if there are any bugs found in the code.
+
+
 7. Error Handling: How do the different patterns(Observer, chain of Responsibility) handle error conditions? What are the trade-offs between fail-fast and fail-safe error handling strategies?
 
 The Observer Pattern handles error conditions by catching exceptions and logging them so that other observers can be executed. The Chain of Responsibility pattern passes the error condition through a chain of handlers where each handler either processes the request if it meets the right conditions or passes onto the next handler in the chain. For fail-fast error handling, it makes debugging much easier since the error is shown when the code fails; however, it can lead to the system stopping frequently while fail-safe can still continue running the code while handling the errors, making errors difficult to locate.
