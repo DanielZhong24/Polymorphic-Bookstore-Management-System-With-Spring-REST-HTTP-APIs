@@ -1,3 +1,8 @@
+# Video Reflection
+[![YIP](https://img.youtube.com/vi/QrKSBjkpc6Y/0.jpg)](https://www.youtube.com/watch?v=QrKSBjkpc6Y)
+
+# Reflection Question
+
 1. How many concrete classes extend the abstract Material class? Identify each one and explain their specific purposes.
 
 In the Lab 4 bookstore system, five concrete subclasses extend the abstract Material class: PrintedBook, EBook, AudioBook, VideoMaterial, and Magazine. Each represents a specific real world item in the bookstore. PrintedBook models traditional physical books with attributes such as pageCount, publisher, and a flag for hardcover status. EBook represents digital publications and introduces fields like fileFormat, fileSize, and drmProtected. AudioBook captures spoken word media, adding details such as duration, narrator, and MediaQuality. VideoMaterial models multimedia products with attributes for resolution, encoding, and duration, while Magazine represents recurring periodicals characterized by issueNumber, publicationDate, and frequency. These subclasses extend the common structure of Material, inheriting attributes like id, title, price, and year, while overriding or extending methods to demonstrate specialization and polymorphism within the domain layer.
